@@ -3,6 +3,8 @@ package com.example.renda.encrypt;
 import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -10,6 +12,8 @@ public class MainActivity extends AppCompatActivity {
 
     String seedValue = "This Is MySecure";
     TextView txe;
+    EditText edt;
+    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,7 +23,16 @@ public class MainActivity extends AppCompatActivity {
         RelativeLayout relativeLayout =
                 (RelativeLayout) findViewById(R.id.root);
 
-        String normalText = "rlbert VVVVancouver PHONE NUMBER IS 7788888888";
+        button = (Button) findViewById(R.id.start);
+        button.setOnClickListener(view->runService());
+
+    }
+
+    private void runService(){
+
+        edt = (EditText) findViewById(R.id.editText);
+        String normalText = edt.getText().toString();
+        //String normalText = "rlbert VVVVancouver PHONE NUMBER IS 7788888888";
         String normalTextEnc;
         String normalTextDec;
 
