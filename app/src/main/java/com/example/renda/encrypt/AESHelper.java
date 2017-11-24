@@ -2,6 +2,8 @@ package com.example.renda.encrypt;
 
 
 import java.security.SecureRandom;
+import java.util.Random;
+
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.SecretKey;
@@ -22,6 +24,8 @@ public class AESHelper {
 
     public static String decrypt(String seed, String encrypted) throws Exception {
         byte[] rawKey = getRawKey(seed.getBytes());
+
+        encrypted = throwaway(encrypted);
         byte[] enc = toByte(encrypted);
 
         byte[] result = decrypt(rawKey, enc);
@@ -68,19 +72,48 @@ public class AESHelper {
         byte[] result = new byte[len];
         for (int i = 0; i < len; i++)
             result[i] = Integer.valueOf(hexString.substring(2*i, 2*i+2), 16).byteValue();
+
         return result;
     }
 
     public static String toHex(byte[] buf) {
         if (buf == null)
             return "";
-        StringBuffer result = new StringBuffer(2*buf.length);
+        StringBuffer result = new StringBuffer(2*(buf.length + 1));
         for (int i = 0; i < buf.length; i++) {
+
             appendHex(result, buf[i]);
         }
-        return result.toString();
+        //return result.toString();
+        String temp = result.toString();
+        return addSomething(temp);
     }
+
+    private static String getSaltString(int len) {
+        String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        StringBuilder salt = new StringBuilder();
+        Random rnd = new Random();
+        while (salt.length() < len) { // length of the random string.
+            int index = (int) (rnd.nextFloat() * SALTCHARS.length());
+            salt.append(SALTCHARS.charAt(index));
+        }
+        String saltStr = salt.toString();
+        return saltStr;
+
+    }
+
+    private static String addSomething(String ori){
+        String head = getSaltString(LEN);
+        ori = head.concat(ori);
+        return ori;
+    }
+
+    private static String throwaway(String ori){
+        return ori.substring(LEN);
+    }
+
     private final static String HEX = "0123456789ABCDEF";
+    private final static int LEN = 10;
 
     private static void appendHex(StringBuffer sb, byte b) {
         sb.append(HEX.charAt((b>>4)&0x0f)).append(HEX.charAt(b&0x0f));
