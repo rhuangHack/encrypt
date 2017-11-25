@@ -24,7 +24,6 @@ public class AESHelper {
 
     public static String decrypt(String seed, String encrypted) throws Exception {
         byte[] rawKey = getRawKey(seed.getBytes());
-
         encrypted = throwaway(encrypted);
         byte[] enc = toByte(encrypted);
 
@@ -103,17 +102,25 @@ public class AESHelper {
     }
 
     private static String addSomething(String ori){
-        String head = getSaltString(LEN);
+        Random rnd = new Random();
+        int len = 0;
+        while(len == 0){
+            len = (int) (rnd.nextFloat() * MAXLEN);
+        }
+        String head = getSaltString(len);
         ori = head.concat(ori);
-        return ori;
+        return ori + len;
     }
 
     private static String throwaway(String ori){
-        return ori.substring(LEN);
+        int length = ori.length();
+        String getlen = "" + ori.charAt(length - 1);
+        int len = Integer.parseInt(getlen);
+        return ori.substring(len, length - 1);
     }
 
     private final static String HEX = "0123456789ABCDEF";
-    private final static int LEN = 10;
+    private final static int MAXLEN = 10;
 
     private static void appendHex(StringBuffer sb, byte b) {
         sb.append(HEX.charAt((b>>4)&0x0f)).append(HEX.charAt(b&0x0f));
