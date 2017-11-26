@@ -1,11 +1,17 @@
 package com.example.renda.encrypt;
 
 
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.util.Random;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -26,8 +32,12 @@ public class AESHelper {
         byte[] rawKey = getRawKey(seed.getBytes());
         encrypted = throwaway(encrypted);
         byte[] enc = toByte(encrypted);
+        byte[] result;
 
-        byte[] result = decrypt(rawKey, enc);
+        result = decrypt(rawKey, enc);
+        if (result == null){
+            return "bad password!";
+        }
         return new String(result);
     }
 
@@ -50,13 +60,19 @@ public class AESHelper {
         return encrypted;
     }
 
-    private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
-        SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
-        Cipher cipher = Cipher.getInstance("AES");
-        cipher.init(Cipher.DECRYPT_MODE, skeySpec, new IvParameterSpec(new byte[cipher.getBlockSize()]));
+    private static byte[] decrypt(byte[] raw, byte[] encrypted) {
+        try {
+            SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
+            Cipher cipher = Cipher.getInstance("AES");
+            cipher.init(Cipher.DECRYPT_MODE, skeySpec, new IvParameterSpec(new byte[cipher.getBlockSize()]));
 
-        byte[] decrypted = cipher.doFinal(encrypted);
-        return decrypted;
+            byte[] decrypted = cipher.doFinal(encrypted);
+            return decrypted;
+        } catch (BadPaddingException | IllegalBlockSizeException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | InvalidAlgorithmParameterException e) {
+            //e.printStackTrace();
+            return null;
+        }
+
     }
 
     public static String toHex(String txt) {

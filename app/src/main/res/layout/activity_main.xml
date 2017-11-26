@@ -25,6 +25,7 @@
         android:layout_marginLeft="21dp"
         android:layout_marginStart="21dp"
         android:ems="10"
+        android:hint="payload"
         android:inputType="textPersonName" />
 
     <Button
@@ -38,5 +39,47 @@
         android:layout_marginEnd="15dp"
         android:layout_marginRight="15dp"
         android:text="start" />
+
+    <EditText
+        android:id="@+id/encrypt_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/editText"
+        android:layout_alignLeft="@+id/editText"
+        android:layout_alignStart="@+id/editText"
+        android:layout_marginBottom="18dp"
+        android:ems="10"
+        android:hint="user password"
+        android:inputType="textPersonName" />
+
+    <EditText
+        android:id="@+id/decrypt_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/encrypt_text"
+        android:layout_alignLeft="@+id/encrypt_text"
+        android:layout_alignStart="@+id/encrypt_text"
+        android:layout_marginBottom="14dp"
+        android:ems="10"
+        android:hint="user password"
+        android:inputType="textPersonName" />
+
+    <Button
+        android:id="@+id/button_de"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/decrypt_text"
+        android:layout_alignEnd="@+id/start"
+        android:layout_alignRight="@+id/start"
+        android:text="decrypt" />
+
+    <Button
+        android:id="@+id/button_en"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/encrypt_text"
+        android:layout_alignEnd="@+id/button_de"
+        android:layout_alignRight="@+id/button_de"
+        android:text="encrypt" />
 
 </RelativeLayout>
